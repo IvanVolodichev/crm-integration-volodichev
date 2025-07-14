@@ -13,10 +13,7 @@ $apiClient = new AmoCRMApiClient($clientId, $clientSecret, $redirectUri);
 
 // Переход пользователя по ссылке для авторизации
 if (!isset($_GET['code'])) {
-    $authorizationUrl = $apiClient->getOAuthClient()->getAuthorizeUrl([
-        'redirect_uri' => $redirectUri,
-        'client_id' => $clientId,
-    ]);
+    $authorizationUrl = $apiClient->getOAuthClient()->getAuthorizeUrl();
 
     echo "<a href='{$authorizationUrl}'>Авторизоваться в amoCRM</a>";
     exit;
