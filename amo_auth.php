@@ -6,15 +6,12 @@ require_once __DIR__ . '/vendor/autoload.php';
 use AmoCRM\Client\AmoCRMApiClient;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 
-
 // Конфигурация
 $clientId = 'a0faa7c2-3672-431e-aa0e-fc5e4f6d7acf';
 $clientSecret = 'rg8eZvghpWqhQF1gzY3SkpYC7yrS2RGz7Wlp9X92Hjd5As2zrOLJ6PZTHr2OFM6n';
 $redirectUri = 'http://cognitive.beget.tech/amo_auth.php';
 
 $apiClient = new AmoCRMApiClient($clientId, $clientSecret, $redirectUri);
-
-session_start();
 
 // Генерируем случайный state-параметр
 $state = bin2hex(random_bytes(16));
@@ -32,6 +29,9 @@ if (!isset($_GET['code'])) {
 
 // Обработка кода после авторизации
 try {
+    if (isset($_GET['referer'])) {
+        $apiClient->setAccountBaseDomain($_GET['referer']);
+    }
     /** @var AccessTokenInterface $accessToken */
     $accessToken = $apiClient->getOAuthClient()->getAccessTokenByCode($_GET['code']);
 
