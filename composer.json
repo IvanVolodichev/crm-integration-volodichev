@@ -1,0 +1,17 @@
+{
+    "name": "ivan-volodichev/crm-integration",
+    "autoload": {
+        "psr-4": {
+            "IvanVolodichev\\CrmIntegration\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ivan Volodichev",
+            "email": "ivan_vol@icloud.com"
+        }
+    ],
+    "require": {
+        "amocrm/amocrm-api-library": "^1.13"
+    }
+}
