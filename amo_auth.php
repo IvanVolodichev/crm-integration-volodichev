@@ -14,34 +14,58 @@ $redirectUri = 'http://cognitive.beget.tech/amo_auth.php';
 
 $apiClient = new AmoCRMApiClient($clientId, $clientSecret, $redirectUri);
 
-// Генерируем случайный state-параметр
-$state = bin2hex(random_bytes(16));
-$_SESSION['oauth2state'] = $state;
+session_start();
 
-// Переход пользователя по ссылке для авторизации
-if (!isset($_GET['code'])) {
-    $authorizationUrl = $apiClient->getOAuthClient()->getAuthorizeUrl([
-        'state' => $state,
-    ]);
-
-    echo "<a href='{$authorizationUrl}'>Авторизоваться в amoCRM</a>";
-    exit;
+if (isset($_GET['referer'])) {
+    $apiClient->setAccountBaseDomain($_GET['referer']);
 }
 
-// Обработка кода после авторизации
+if (!isset($_GET['code'])) {
+    $state = bin2hex(random_bytes(16));
+    $_SESSION['oauth2state'] = $state;
+    if (isset($_GET['button'])) {
+        echo $apiClient->getOAuthClient()->getOAuthButton(
+            [
+                'title' => 'Установить интеграцию',
+                'compact' => true,
+                'class_name' => 'className',
+                'color' => 'default',
+                'error_callback' => 'handleOauthError',
+                'state' => $state,
+            ]
+        );
+        die;
+    } else {
+        $authorizationUrl = $apiClient->getOAuthClient()->getAuthorizeUrl([
+            'state' => $state,
+            'mode' => 'post_message',
+        ]);
+        header('Location: ' . $authorizationUrl);
+        die;
+    }
+} elseif (!isset($_GET['from_widget']) && (empty($_GET['state']) || empty($_SESSION['oauth2state']) || ($_GET['state'] !== $_SESSION['oauth2state']))) {
+    unset($_SESSION['oauth2state']);
+    exit('Invalid state');
+}
+
+/**
+ * Ловим обратный код
+ */
 try {
-    /** @var AccessTokenInterface $accessToken */
     $accessToken = $apiClient->getOAuthClient()->getAccessTokenByCode($_GET['code']);
 
-    // Сохраняем токены
-    file_put_contents(__DIR__ . '/tokens.json', json_encode([
-        'accessToken' => $accessToken->getToken(),
-        'refreshToken' => $accessToken->getRefreshToken(),
-        'expires' => $accessToken->getExpires(),
-        'baseDomain' => $apiClient->getAccountBaseDomain(),
-    ]));
-
-    echo "Успешно авторизовано! Токены сохранены.";
+    if (!$accessToken->hasExpired()) {
+        saveToken([
+            'accessToken' => $accessToken->getToken(),
+            'refreshToken' => $accessToken->getRefreshToken(),
+            'expires' => $accessToken->getExpires(),
+            'baseDomain' => $apiClient->getAccountBaseDomain(),
+        ]);
+    }
 } catch (Exception $e) {
-    echo "Ошибка авторизации: " . $e->getMessage();
+    die((string)$e);
 }
+
+$ownerDetails = $apiClient->getOAuthClient()->getResourceOwner($accessToken);
+
+printf('Hello, %s!', $ownerDetails->getName());
