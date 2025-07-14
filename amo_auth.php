@@ -7,7 +7,7 @@ use League\OAuth2\Client\Token\AccessTokenInterface;
 // Конфигурация
 $clientId = '9152fb82-9431-4f5b-96c1-e6ccf6fe3120';
 $clientSecret = 'oHzR6klMrJdhRO3tSQPmIvQmITZkuOPx8sSNqXosdoig4jreTWrwIq2g7KnTYkQf';
-$redirectUri = 'http://cognitive.beget.tech/src/amo/auth.php';
+$redirectUri = 'http://cognitive.beget.tech/amo_auth.php';
 
 $apiClient = new AmoCRMApiClient($clientId, $clientSecret, $redirectUri);
 
