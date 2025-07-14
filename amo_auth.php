@@ -11,12 +11,25 @@ $redirectUri = 'http://cognitive.beget.tech/amo_auth.php';
 
 $apiClient = new AmoCRMApiClient($clientId, $clientSecret, $redirectUri);
 
+// Генерируем случайный state-параметр
+$state = bin2hex(random_bytes(16));
+$_SESSION['oauth2state'] = $state;
+
 // Переход пользователя по ссылке для авторизации
 if (!isset($_GET['code'])) {
-    $authorizationUrl = $apiClient->getOAuthClient()->getAuthorizeUrl();
+    $authorizationUrl = $apiClient->getOAuthClient()->getAuthorizeUrl([
+        'state' => $state,
+        'mode' => 'post_message',
+    ]);
 
     echo "<a href='{$authorizationUrl}'>Авторизоваться в amoCRM</a>";
     exit;
+}
+
+// Проверяем state-параметр для защиты от CSRF
+if (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
+    unset($_SESSION['oauth2state']);
+    exit('Invalid state');
 }
 
 // Обработка кода после авторизации
@@ -24,14 +37,15 @@ try {
     /** @var AccessTokenInterface $accessToken */
     $accessToken = $apiClient->getOAuthClient()->getAccessTokenByCode($_GET['code']);
 
-    // Сохраняем токены (рекомендуется в БД или файле)
+    // Сохраняем токены
     file_put_contents(__DIR__ . '/tokens.json', json_encode([
         'accessToken' => $accessToken->getToken(),
         'refreshToken' => $accessToken->getRefreshToken(),
         'expires' => $accessToken->getExpires(),
+        'baseDomain' => $apiClient->getAccountBaseDomain(),
     ]));
 
-    echo "Успешно авторизовано!";
+    echo "Успешно авторизовано! Токены сохранены.";
 } catch (Exception $e) {
     echo "Ошибка авторизации: " . $e->getMessage();
 }
