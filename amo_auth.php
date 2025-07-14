@@ -22,7 +22,6 @@ $_SESSION['oauth2state'] = $state;
 if (!isset($_GET['code'])) {
     $authorizationUrl = $apiClient->getOAuthClient()->getAuthorizeUrl([
         'state' => $state,
-        'mode' => 'post_message',
     ]);
 
     echo "<a href='{$authorizationUrl}'>Авторизоваться в amoCRM</a>";
@@ -45,4 +44,5 @@ try {
     echo "Успешно авторизовано! Токены сохранены.";
 } catch (Exception $e) {
     echo "Ошибка авторизации: " . $e->getMessage();
+    var_dump($apiClient->getOAuthClient());
 }
