@@ -16,7 +16,6 @@ if (!isset($_GET['code'])) {
     $authorizationUrl = $apiClient->getOAuthClient()->getAuthorizeUrl([
         'redirect_uri' => $redirectUri,
         'client_id' => $clientId,
-        'mode' => 'post_message',
     ]);
 
     echo "<a href='{$authorizationUrl}'>Авторизоваться в amoCRM</a>";
