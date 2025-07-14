@@ -9,7 +9,7 @@ use League\OAuth2\Client\Token\AccessTokenInterface;
 
 // Конфигурация
 $clientId = '9152fb82-9431-4f5b-96c1-e6ccf6fe3120';
-$clientSecret = 'oHzR6klMrJdhRO3tSQPmIvQmITZkuOPx8sSNqXosdoig4jreTWrwIq2g7KnTYkQf';
+$clientSecret = '7YhSESbe1HX04FHKa1K1s6LiIc4Wy4JudzKVM9aVmk0hd1oR7utkNxab6I3Ll4nV';
 $redirectUri = 'http://cognitive.beget.tech/amo_auth.php';
 
 $apiClient = new AmoCRMApiClient($clientId, $clientSecret, $redirectUri);
@@ -44,5 +44,4 @@ try {
     echo "Успешно авторизовано! Токены сохранены.";
 } catch (Exception $e) {
     echo "Ошибка авторизации: " . $e->getMessage();
-    var_dump($apiClient->getOAuthClient());
 }
