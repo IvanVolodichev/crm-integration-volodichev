@@ -12,17 +12,17 @@
         <form action="handler.php" method="POST">
             <div class="form-group">
                 <label for="name">Ваше имя</label>
-                <input type="text" name="name" id="name" placeholder="Иван Иванов">
+                <input required type="text" name="name" id="name" placeholder="Иван Иванов">
             </div>
             
             <div class="form-group">
                 <label for="phone">Телефон</label>
-                <input type="text" name="phone" id="phone" placeholder="+7 (999) 123-45-67">
+                <input required type="text" name="phone" id="phone" placeholder="+7 (999) 123-45-67">
             </div>
             
             <div class="form-group">
                 <label for="comment">Комментарий</label>
-                <textarea name="comment" id="comment" placeholder="Ваш комментарий..."></textarea>
+                <textarea required name="comment" id="comment" placeholder="Ваш комментарий..."></textarea>
             </div>
             
             <button name="submit" type="submit">Отправить заявку</button>
