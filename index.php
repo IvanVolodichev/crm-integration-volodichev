@@ -9,7 +9,7 @@
 <body>
     <div class="form-container">
         <h1>Оставьте заявку</h1>
-        <form action="handler.php" method="POST">
+        <form action="bitrix.php" method="POST">
             <div class="form-group">
                 <label for="name">Ваше имя</label>
                 <input required type="text" name="name" id="name" placeholder="Иван Иванов">
@@ -30,3 +30,4 @@
     </div>
 </body>
 </html>
+

@@ -23,8 +23,8 @@ use AmoCRM\Models\TagModel;
 // 1. Настройки клиента
 $clientId = 'a0faa7c2-3672-431e-aa0e-fc5e4f6d7acf';
 $clientSecret = 'rg8eZvghpWqhQF1gzY3SkpYC7yrS2RGz7Wlp9X92Hjd5As2zrOLJ6PZTHr2OFM6n';
-$redirectUri = 'http://cognitive.beget.tech/amo_auth.php';
-// $redirectUri = 'http://localhost:8000/amo_auth.php';
+// $redirectUri = 'http://cognitive.beget.tech/amo_auth.php';
+$redirectUri = 'http://localhost:8000/amo_auth.php';
 
 $apiClient = new AmoCRMApiClient($clientId, $clientSecret, $redirectUri);
 
